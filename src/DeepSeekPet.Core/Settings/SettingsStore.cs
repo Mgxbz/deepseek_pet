@@ -79,7 +79,10 @@ public sealed class SettingsStore
             WindowLeft = settings.WindowLeft,
             WindowTop = settings.WindowTop,
             WindowSnapKind = settings.WindowSnapKind,
-            WindowDockEdge = settings.WindowDockEdge
+            WindowDockEdge = settings.WindowDockEdge,
+            SpendDate = settings.SpendDate,
+            SpendStartTotal = settings.SpendStartTotal,
+            SpendLastTotal = settings.SpendLastTotal
         };
 
         var json = JsonSerializer.Serialize(copy, JsonOptions);

@@ -44,7 +44,7 @@
             Grid.Row="1"
             MinWidth="160"
             Width="160"
-            Height="100"
+            MinHeight="100"
             Margin="8,0,8,6"
             CornerRadius="10"
             Background="#FFFFFFF8"
@@ -67,6 +67,12 @@
                    FontSize="12"
                    Foreground="#FF5A5A5A"
                    Text="未配置"/>
+        <TextBlock x:Name="SpendText"
+                   Margin="0,8,0,0"
+                   FontSize="11"
+                   Foreground="#FF6E6E6E"
+                   Visibility="Collapsed"
+                   Text="今日使用 ¥ 0.00"/>
         <StackPanel x:Name="DetailPanel" Visibility="Collapsed" Margin="0,8,0,0">
           <TextBlock FontSize="11"
                      Foreground="#FF6E6E6E"

@@ -37,6 +37,12 @@ public sealed class AppSettings
 
     public DockEdge? WindowDockEdge { get; set; }
 
+    public DateOnly? SpendDate { get; set; }
+
+    public decimal SpendStartTotal { get; set; }
+
+    public decimal SpendLastTotal { get; set; }
+
     [JsonIgnore]
     public int ClampedRefreshIntervalSeconds =>
         Math.Clamp(RefreshIntervalSeconds, MinRefreshSeconds, MaxRefreshSeconds);

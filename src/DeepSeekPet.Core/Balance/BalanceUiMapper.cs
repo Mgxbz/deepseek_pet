@@ -9,7 +9,8 @@ public static class BalanceUiMapper
         BalanceSnapshot? snapshot,
         bool hasKey,
         bool isRefreshing,
-        decimal lowThreshold)
+        decimal lowThreshold,
+        decimal spentToday = 0)
     {
         if (!hasKey)
         {
@@ -42,6 +43,7 @@ public static class BalanceUiMapper
         var primary = $"{symbol} {snapshot.Total.ToString("0.00", CultureInfo.InvariantCulture)}";
         var detail =
             $"赠送 {symbol} {snapshot.Granted.ToString("0.00", CultureInfo.InvariantCulture)}  ·  充值 {symbol} {snapshot.ToppedUp.ToString("0.00", CultureInfo.InvariantCulture)}";
+        var spend = $"今日使用 {symbol} {spentToday.ToString("0.00", CultureInfo.InvariantCulture)}";
 
         if (!snapshot.IsAvailable)
         {
@@ -51,7 +53,8 @@ public static class BalanceUiMapper
                 primary,
                 detail,
                 "当前不可用于 API",
-                isRefreshing);
+                isRefreshing,
+                spend);
         }
 
         if (snapshot.Total <= 0)
@@ -62,7 +65,8 @@ public static class BalanceUiMapper
                 primary,
                 detail,
                 "余额已用完",
-                isRefreshing);
+                isRefreshing,
+                spend);
         }
 
         if (snapshot.Total < lowThreshold)
@@ -73,7 +77,8 @@ public static class BalanceUiMapper
                 primary,
                 detail,
                 "余额偏低",
-                isRefreshing);
+                isRefreshing,
+                spend);
         }
 
         return new BalanceUiState(
@@ -82,7 +87,8 @@ public static class BalanceUiMapper
             primary,
             detail,
             "可用于 API",
-            isRefreshing);
+            isRefreshing,
+            spend);
     }
 
     public static string CurrencySymbol(string? currency) =>

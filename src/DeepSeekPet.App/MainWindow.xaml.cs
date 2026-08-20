@@ -27,6 +27,7 @@ public partial class MainWindow : Window
     private bool _pulling;
     private Point _dragOffset;
     private BalanceKind? _lastBalloonKind;
+    private bool _bubbleHovered;
 
     public MainWindow(PetSession session)
     {
@@ -186,6 +187,8 @@ public partial class MainWindow : Window
             PrimaryText.Text = state.PrimaryText;
             StatusText.Text = state.IsRefreshing ? $"{state.StatusText} · 刷新中" : state.StatusText;
             DetailRun.Text = state.DetailText;
+            SpendText.Text = state.SpendText;
+            ApplyBubbleDetailVisibility();
             Pet.SetMood(state.Mood);
             MaybeBalloon(state);
         });
@@ -377,10 +380,31 @@ public partial class MainWindow : Window
     }
 
     private void OnBubbleMouseEnter(object sender, MouseEventArgs e)
-        => DetailPanel.Visibility = Visibility.Visible;
+    {
+        _bubbleHovered = true;
+        ApplyBubbleDetailVisibility();
+    }
 
     private void OnBubbleMouseLeave(object sender, MouseEventArgs e)
-        => DetailPanel.Visibility = Visibility.Collapsed;
+    {
+        _bubbleHovered = false;
+        ApplyBubbleDetailVisibility();
+    }
+
+    private void ApplyBubbleDetailVisibility()
+    {
+        if (_bubbleHovered)
+        {
+            SpendText.Visibility = Visibility.Collapsed;
+            DetailPanel.Visibility = Visibility.Visible;
+            return;
+        }
+
+        DetailPanel.Visibility = Visibility.Collapsed;
+        SpendText.Visibility = string.IsNullOrWhiteSpace(SpendText.Text)
+            ? Visibility.Collapsed
+            : Visibility.Visible;
+    }
 
     private void ToggleHide()
     {

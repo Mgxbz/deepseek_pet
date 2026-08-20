@@ -42,7 +42,8 @@ public sealed record BalanceUiState(
     string PrimaryText,
     string DetailText,
     string StatusText,
-    bool IsRefreshing)
+    bool IsRefreshing,
+    string SpendText = "")
 {
     public static BalanceUiState NoKey { get; } = new(
         BalanceKind.NoKey,

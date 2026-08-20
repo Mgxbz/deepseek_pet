@@ -13,6 +13,9 @@ public sealed class BalanceMonitor : IDisposable
     ];
 
     private readonly IBalanceClient _client;
+    private readonly AppSettings _settings;
+    private readonly Action? _persist;
+    private readonly DailySpendTracker _spend = new();
     private readonly SemaphoreSlim _kick = new(0, 1);
     private readonly object _gate = new();
 
@@ -31,10 +34,13 @@ public sealed class BalanceMonitor : IDisposable
 
     public DateTimeOffset LastManualRefreshUtc { get; private set; } = DateTimeOffset.MinValue;
 
-    public BalanceMonitor(IBalanceClient client, AppSettings settings)
+    public BalanceMonitor(IBalanceClient client, AppSettings settings, Action? persist = null)
     {
         _client = client;
+        _settings = settings;
+        _persist = persist;
         ApplySettings(settings);
+        _spend.Restore(settings.SpendDate, settings.SpendStartTotal, settings.SpendLastTotal);
     }
 
     public void Start()
@@ -141,18 +147,37 @@ public sealed class BalanceMonitor : IDisposable
             }
 
             TimeSpan delay;
+            var spent = _spend.SpentToday;
             if (result.Success)
             {
                 _failStreak = 0;
                 _lastSuccess = result;
                 delay = TimeSpan.FromSeconds(interval);
-                Raise(BalanceUiMapper.Map(result, true, false, threshold));
+                var dirty = false;
+                lock (_gate)
+                {
+                    dirty = _spend.OnBalance(result.Total, DateOnly.FromDateTime(DateTime.Now));
+                    spent = _spend.SpentToday;
+                    if (dirty)
+                    {
+                        _settings.SpendDate = _spend.Date;
+                        _settings.SpendStartTotal = _spend.StartTotal;
+                        _settings.SpendLastTotal = _spend.LastTotal;
+                    }
+                }
+
+                if (dirty)
+                {
+                    _persist?.Invoke();
+                }
+
+                Raise(BalanceUiMapper.Map(result, true, false, threshold, spent));
             }
             else
             {
                 _failStreak = Math.Min(_failStreak + 1, Backoffs.Length);
                 delay = Backoffs[Math.Max(0, _failStreak - 1)];
-                Raise(BalanceUiMapper.Map(result, true, false, threshold));
+                Raise(BalanceUiMapper.Map(result, true, false, threshold, spent));
             }
 
             await WaitAsync(delay, ct).ConfigureAwait(false);
@@ -163,11 +188,11 @@ public sealed class BalanceMonitor : IDisposable
     {
         if (_lastSuccess is null)
         {
-            Raise(BalanceUiMapper.Map(null, true, true, threshold));
+            Raise(BalanceUiMapper.Map(null, true, true, threshold, _spend.SpentToday));
             return;
         }
 
-        Raise(BalanceUiMapper.Map(_lastSuccess, true, true, threshold) with
+        Raise(BalanceUiMapper.Map(_lastSuccess, true, true, threshold, _spend.SpentToday) with
         {
             Mood = PetMood.Loading,
             IsRefreshing = true

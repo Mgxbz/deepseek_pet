@@ -24,7 +24,7 @@ public sealed class PetSession : IDisposable
             BaseAddress = new Uri(DeepSeekBalanceClient.DefaultBaseUrl),
             Timeout = TimeSpan.FromSeconds(10)
         };
-        Monitor = new BalanceMonitor(new DeepSeekBalanceClient(_http), Settings);
+        Monitor = new BalanceMonitor(new DeepSeekBalanceClient(_http), Settings, () => Store.Save(Settings));
         Monitor.StateChanged += (_, state) => BalanceChanged?.Invoke(state);
     }
 
