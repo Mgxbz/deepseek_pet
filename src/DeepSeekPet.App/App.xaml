@@ -1,0 +1,16 @@
+<Application x:Class="DeepSeekPet.App.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             ShutdownMode="OnExplicitShutdown">
+  <Application.Resources>
+    <Color x:Key="PetTeal">#FF3DB8B0</Color>
+    <Color x:Key="PetTealDark">#FF1F7A74</Color>
+    <SolidColorBrush x:Key="InkBrush" Color="#FF1D3B38"/>
+    <SolidColorBrush x:Key="MutedBrush" Color="#FF5C7A76"/>
+    <SolidColorBrush x:Key="CardBrush" Color="#F2FFFFFF"/>
+    <SolidColorBrush x:Key="AccentBrush" Color="#FF2FA39A"/>
+    <Style TargetType="TextBlock">
+      <Setter Property="FontFamily" Value="Segoe UI, Microsoft YaHei UI"/>
+    </Style>
+  </Application.Resources>
+</Application>

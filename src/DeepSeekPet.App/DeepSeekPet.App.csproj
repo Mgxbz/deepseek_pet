@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <StartupObject>DeepSeekPet.App.Program</StartupObject>
+    <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+    <RootNamespace>DeepSeekPet.App</RootNamespace>
+    <AssemblyName>DeepSeekPet</AssemblyName>
+    <Product>余宠</Product>
+    <AssemblyTitle>余宠</AssemblyTitle>
+    <Version>0.1.0</Version>
+    <ApplicationIcon>Assets\tray.ico</ApplicationIcon>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <Using Remove="System.Drawing" />
+    <Using Remove="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DeepSeekPet.Core\DeepSeekPet.Core.csproj" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.11" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Character\normal.png" />
+    <Resource Include="Assets\Character\low.png" />
+    <Resource Include="Assets\Character\peek.png" />
+    <Resource Include="Assets\tray.png" />
+  </ItemGroup>
+</Project>

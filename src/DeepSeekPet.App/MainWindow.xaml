@@ -1,0 +1,97 @@
+<Window x:Class="DeepSeekPet.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:character="clr-namespace:DeepSeekPet.App.Character"
+        Title="余宠"
+        Width="236"
+        Height="280"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize"
+        ShowActivated="False"
+        MouseLeftButtonDown="OnMouseLeftButtonDown"
+        MouseLeftButtonUp="OnMouseLeftButtonUp"
+        MouseMove="OnMouseMove"
+        MouseLeave="OnMouseLeave"
+        Loaded="OnLoaded">
+  <Window.ContextMenu>
+    <ContextMenu>
+      <MenuItem Header="立即刷新" Click="OnRefreshMenu"/>
+      <MenuItem Header="打开用量页" Click="OnOpenUsageMenu"/>
+      <MenuItem Header="收起 / 展开边缘" Click="OnToggleDockMenu"/>
+      <Separator/>
+      <MenuItem Header="设置" Click="OnSettingsMenu"/>
+      <MenuItem Header="退出" Click="OnExitMenu"/>
+    </ContextMenu>
+  </Window.ContextMenu>
+  <Grid x:Name="LayoutRoot" Margin="4">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+    <character:PetCharacter x:Name="Pet"
+                            Grid.Row="0"
+                            Width="184"
+                            Height="168"
+                            Margin="0,0,0,-45"
+                            HorizontalAlignment="Center"
+                            Panel.ZIndex="1"
+                            IsHitTestVisible="True"/>
+    <Border x:Name="BubbleHost"
+            Grid.Row="1"
+            MinWidth="160"
+            Width="160"
+            Height="100"
+            Margin="8,0,8,6"
+            CornerRadius="10"
+            Background="#FFFFFFF8"
+            BorderBrush="#FF222222"
+            BorderThickness="2"
+            Padding="16,12,5,12"
+            Cursor="Hand"
+            Panel.ZIndex="0"
+            MouseLeftButtonDown="OnBubbleClick"
+            MouseEnter="OnBubbleMouseEnter"
+            MouseLeave="OnBubbleMouseLeave">
+      <StackPanel>
+        <TextBlock x:Name="PrimaryText"
+                   FontSize="20"
+                   FontWeight="SemiBold"
+                   Foreground="#FF1A1A1A"
+                   Text="先填 API Key"/>
+        <TextBlock x:Name="StatusText"
+                   Margin="0,6,0,0"
+                   FontSize="12"
+                   Foreground="#FF5A5A5A"
+                   Text="未配置"/>
+        <StackPanel x:Name="DetailPanel" Visibility="Collapsed" Margin="0,8,0,0">
+          <TextBlock FontSize="11"
+                     Foreground="#FF6E6E6E"
+                     TextWrapping="Wrap">
+            <Hyperlink x:Name="UsageLink"
+                       NavigateUri="https://platform.deepseek.com/usage"
+                       RequestNavigate="OnOpenUsage"
+                       ToolTip="打开用量页">
+              <Hyperlink.Style>
+                <Style TargetType="Hyperlink">
+                  <Setter Property="TextDecorations" Value="None"/>
+                  <Setter Property="Foreground" Value="#FF6E6E6E"/>
+                  <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                      <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+                      <Setter Property="TextDecorations" Value="Underline"/>
+                    </Trigger>
+                  </Style.Triggers>
+                </Style>
+              </Hyperlink.Style>
+              <Run x:Name="DetailRun" Text="在设置里粘贴 DeepSeek 密钥"/>
+            </Hyperlink>
+          </TextBlock>
+        </StackPanel>
+      </StackPanel>
+    </Border>
+  </Grid>
+</Window>

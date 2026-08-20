@@ -1,0 +1,11 @@
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+AppData/
+*.log
+.idea/
+*.DotSettings.user
