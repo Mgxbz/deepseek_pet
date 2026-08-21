@@ -15,9 +15,42 @@
         </DoubleAnimation.EasingFunction>
       </DoubleAnimation>
     </Storyboard>
+    <Storyboard x:Key="PokeStoryboard" FillBehavior="Stop">
+      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Squash"
+                                     Storyboard.TargetProperty="ScaleX">
+        <EasingDoubleKeyFrame KeyTime="0:0:0.08" Value="1.12">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <QuadraticEase EasingMode="EaseOut"/>
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+        <EasingDoubleKeyFrame KeyTime="0:0:0.18" Value="0.94"/>
+        <EasingDoubleKeyFrame KeyTime="0:0:0.28" Value="1">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <BackEase EasingMode="EaseOut" Amplitude="0.4"/>
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+      </DoubleAnimationUsingKeyFrames>
+      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Squash"
+                                     Storyboard.TargetProperty="ScaleY">
+        <EasingDoubleKeyFrame KeyTime="0:0:0.08" Value="0.86">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <QuadraticEase EasingMode="EaseOut"/>
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+        <EasingDoubleKeyFrame KeyTime="0:0:0.18" Value="1.08"/>
+        <EasingDoubleKeyFrame KeyTime="0:0:0.28" Value="1">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <BackEase EasingMode="EaseOut" Amplitude="0.4"/>
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+      </DoubleAnimationUsingKeyFrames>
+    </Storyboard>
   </UserControl.Resources>
 
-  <Grid>
+  <Grid RenderTransformOrigin="0.5,1">
+    <Grid.RenderTransform>
+      <ScaleTransform x:Name="Squash" ScaleX="1" ScaleY="1"/>
+    </Grid.RenderTransform>
     <Image x:Name="Sprite"
            Stretch="Uniform"
            RenderOptions.BitmapScalingMode="HighQuality"

@@ -28,6 +28,7 @@
     <Resource Include="Assets\Character\normal.png" />
     <Resource Include="Assets\Character\low.png" />
     <Resource Include="Assets\Character\peek.png" />
+    <Resource Include="Assets\Character\peek-tb.png" />
     <Resource Include="Assets\tray.png" />
   </ItemGroup>
 </Project>

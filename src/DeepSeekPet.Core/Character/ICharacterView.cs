@@ -1,3 +1,5 @@
+using DeepSeekPet.Core.Snap;
+
 namespace DeepSeekPet.Core.Character;
 
 public enum PetMood
@@ -20,7 +22,7 @@ public interface ICharacterView
     /// </summary>
     void SetLookAt(double? screenX, double? screenY);
 
-    void SetPeek(bool peek);
+    void SetPeek(bool peek, DockEdge? edge = null);
 
     void SetFlip(bool horizontal, bool vertical);
 }

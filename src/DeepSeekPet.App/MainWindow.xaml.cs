@@ -25,7 +25,9 @@ public partial class MainWindow : Window
     private DockEdge? _edge;
     private bool _dragging;
     private bool _pulling;
+    private bool _dragMoved;
     private Point _dragOffset;
+    private Point _pressPosition;
     private BalanceKind? _lastBalloonKind;
     private bool _bubbleHovered;
 
@@ -233,9 +235,11 @@ public partial class MainWindow : Window
 
         StopWindowAnimation();
         _dragging = true;
+        _dragMoved = false;
         _pulling = _snapKind == SnapKind.Hidden && _edge is not null;
         _autoHideTimer.Stop();
         _dragOffset = e.GetPosition(this);
+        _pressPosition = _dragOffset;
         CaptureMouse();
         e.Handled = true;
     }
@@ -245,6 +249,19 @@ public partial class MainWindow : Window
         if (!_dragging || e.LeftButton != MouseButtonState.Pressed)
         {
             return;
+        }
+
+        if (!_dragMoved)
+        {
+            var current = e.GetPosition(this);
+            var dx = current.X - _pressPosition.X;
+            var dy = current.Y - _pressPosition.Y;
+            if ((dx * dx) + (dy * dy) < 36)
+            {
+                return;
+            }
+
+            _dragMoved = true;
         }
 
         var dpi = VisualTreeHelper.GetDpi(this);
@@ -323,9 +340,19 @@ public partial class MainWindow : Window
         }
 
         var pulling = _pulling;
+        var moved = _dragMoved;
         _dragging = false;
         _pulling = false;
+        _dragMoved = false;
         ReleaseMouseCapture();
+
+        if (!moved)
+        {
+            Pet.PlayPoke();
+            TryRefreshFromUi();
+            e.Handled = true;
+            return;
+        }
 
         if (pulling && _edge is { } edge)
         {
@@ -371,12 +398,17 @@ public partial class MainWindow : Window
             return;
         }
 
+        TryRefreshFromUi();
+
+        e.Handled = true;
+    }
+
+    private void TryRefreshFromUi()
+    {
         if (!_session.Monitor.TryManualRefresh())
         {
             StatusText.Text = "刷新太快了，稍等几秒";
         }
-
-        e.Handled = true;
     }
 
     private void OnBubbleMouseEnter(object sender, MouseEventArgs e)
@@ -430,8 +462,8 @@ public partial class MainWindow : Window
     {
         _snapKind = result.Kind;
         _edge = result.Edge;
-        Pet.SetPeek(result.Kind == SnapKind.Hidden);
-        Pet.SetFlip(_edge is DockEdge.Left, _edge is DockEdge.Top);
+        Pet.SetPeek(result.Kind == SnapKind.Hidden, result.Edge);
+        Pet.SetFlip(_edge is DockEdge.Left, false);
         BubbleHost.Visibility = result.Kind == SnapKind.Hidden ? Visibility.Collapsed : Visibility.Visible;
         UpdateLayout();
 
